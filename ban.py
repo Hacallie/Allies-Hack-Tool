@@ -67,10 +67,7 @@ sleep 0.5
 # === Generate message based on ban type ===
 if [ "$bantype" == "1" ]; then
   subject="Request to Review My Temporarily Banned WhatsApp Account"
-  body = """Dear WhatsApp Team,
-I am writing this to request a review...
-Thank you for your support.
-"""
+  body = """Dear WhatsApp Team"""
 My number $phone was temporarily banned.
 I believe this was a mistake, and I kindly request that my account be reviewed.
 
