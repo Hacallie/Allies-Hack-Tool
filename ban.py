@@ -1,121 +1,131 @@
-#!/data/data/com.termux/files/usr/bin/bash
+import os
+import sys
+import time
+from colorama import Fore, Style, init
 
-# === Colors ===
-GREEN="\033[1;32m"
-RED="\033[1;31m"
-YELLOW="\033[1;33m"
-CYAN="\033[1;36m"
-PURPLE="\033[1;35m"
-RESET="\033[0m"
+init(autoreset=True)
 
-clear
-echo -e "${CYAN}"
-echo "  █████╗ ██╗     ██╗     ██╗███████╗"
-echo " ██╔══██╗██║     ██║     ██║██╔════╝"
-echo " ███████║██║     ██║     ██║█████╗  "
-echo " ██╔══██║██║     ██║     ██║██╔══╝  "
-echo " ██║  ██║███████╗███████╗██║███████╗"
-echo " ╚═╝  ╚═╝╚══════╝╚══════╝╚═╝╚══════╝"
-echo -e "${PURPLE}        WHATSAPP BAN REVIEW TOOL - BY ALLIE’S TECH${RESET}"
-echo ""
+def clear():
+    os.system('clear')
 
-echo -e "${GREEN}👾 Initializing Hackish Protocols...${RESET}"
-sleep 0.5
+def animation(message, delay=0.03):
+    for char in message:
+        print(char, end='', flush=True)
+        time.sleep(delay)
+    print("")
 
-# === Animation effect: fake hacking sequence ===
-animation() {
-  local message="$1"
-  for ((i=0; i<${#message}; i++)); do
-    echo -n "${message:$i:1}"
-    sleep 0.03
-  done
-  echo ""
-}
+def loading_bar(task="Processing"):
+    bar = f"{task}: [                    ]"
+    print(Fore.YELLOW + "")
+    for i in range(1, 21):
+        bar = bar[:task.__len__() + 3 + i] + "=" + bar[task.__len__() + 4 + i:]
+        sys.stdout.write(Fore.MAGENTA + "\r" + bar)
+        sys.stdout.flush()
+        time.sleep(0.1)
+    print("")
 
-animation "🔍 Connecting to WhatsApp servers..."
-sleep 1
-animation "✅ Connection established."
-sleep 0.5
-animation "📡 Verifying ban status..."
-sleep 1.2
-animation "🛑 Ban confirmed. Preparing recovery options..."
-sleep 0.5
+def banner():
+    clear()
+    print(Fore.CYAN + Style.BRIGHT + """
+  █████╗ ██╗     ██╗     ██╗███████╗
+ ██╔══██╗██║     ██║     ██║██╔════╝
+ ███████║██║     ██║     ██║█████╗   
+ ██╔══██║██║     ██║     ██║██╔══╝   
+ ██║  ██║███████╗███████╗██║███████╗
+ ╚═╝  ╚═╝╚══════╝╚══════╝╚═╝╚══════╝
+      WHATSAPP BAN REVIEW TOOL - BY ALLIE
+""")
 
-# === Ban type selection ===
-echo ""
-echo -e "${YELLOW}What kind of ban are you experiencing?${RESET}"
-echo "1️⃣  Temporary Ban"
-echo "2️⃣  Permanent Ban"
-read -p "👉 Enter 1 or 2: " bantype
+def fake_hack_sequence():
+    steps = [
+        "Initializing kernel bypass...",
+        "Injecting spoofed tokens...",
+        "Connecting to WhatsApp Core...",
+        "Bypassing 2FA firewall...",
+        "Spoof session established!",
+    ]
+    for step in steps:
+        animation("🔐 " + step)
+        time.sleep(0.8)
 
-if [[ "$bantype" != "1" && "$bantype" != "2" ]]; then
-  echo -e "${RED}❌ Invalid selection. Exiting...${RESET}"
-  exit 1
-fi
+def generate_email(phone, ban_type):
+    if ban_type == "1":
+        subject = "Request to Review My Temporarily Banned WhatsApp Account"
+        body = f"""Dear WhatsApp Team,
 
-# === Phone number input ===
-echo ""
-read -p "📱 Enter your phone number (e.g., +234xxxxxxxxxx): " phone
-
-if [ -z "$phone" ]; then
-  echo -e "${RED}❌ No phone number entered. Exiting...${RESET}"
-  exit 1
-fi
-
-# === Fancy loading ===
-echo -ne "${PURPLE}🧠 Generating custom recovery message"
-for i in {1..6}; do echo -n "."; sleep 0.3; done
-echo -e "${RESET}"
-sleep 0.5
-
-# === Generate message based on ban type ===
-if [ "$bantype" == "1" ]; then
-  subject="Request to Review My Temporarily Banned WhatsApp Account"
-  body="Dear WhatsApp Team,
-
-My number $phone was temporarily banned.
+My number {phone} was temporarily banned.
 I believe this was a mistake, and I kindly request that my account be reviewed.
 
 I use WhatsApp responsibly and will fully comply with your terms of service.
 
 Thank you,
-Allie’s Tech"
-else
-  subject="Appeal for Permanent WhatsApp Ban"
-  body="Dear WhatsApp Team,
+Allie’s Tech"""
+    else:
+        subject = "Appeal for Permanent WhatsApp Ban"
+        body = f"""Dear WhatsApp Team,
 
-My number $phone was permanently banned.
+My number {phone} was permanently banned.
 I respectfully appeal this decision and request a review of my account.
 
 I understand the importance of complying with WhatsApp’s policies, and I’m committed to following all guidelines moving forward.
 
 Thank you for considering my appeal,
-Allie’s Tech"
-fi
+Allie’s Tech"""
+    
+    return subject, body
 
-# === Display the message ===
-echo ""
-echo -e "${GREEN}📄 Generated Message:${RESET}"
-echo "----------------------------------------------"
-echo "To: support@whatsapp.com"
-echo "Subject: $subject"
-echo ""
-echo "$body"
-echo "----------------------------------------------"
+def main():
+    banner()
+    animation(Fore.GREEN + "👾 Initializing Hackish Protocols...")
+    time.sleep(1)
 
-# === Ask to open email ===
-read -p "📧 Do you want to open your email app now? (y/n): " open_email
+    animation("🔍 Connecting to WhatsApp servers...")
+    time.sleep(1)
+    animation("✅ Connection established.")
+    time.sleep(0.5)
 
-if [[ "$open_email" == "y" || "$open_email" == "Y" ]]; then
-  enc_subject=$(echo "$subject" | sed 's/ /%20/g')
-  enc_body=$(echo "$body" | sed 's/ /%20/g' | sed ':a;N;$!ba;s/\n/%0D%0A/g')
-  termux-open "mailto:support@whatsapp.com?subject=$enc_subject&body=$enc_body"
-  echo ""
-  echo -e "${CYAN}📨 Launching your email app...${RESET}"
-else
-  echo -e "${YELLOW}📋 You can copy the message above manually.${RESET}"
-fi
+    loading_bar("Verifying ban status")
+    fake_hack_sequence()
 
-# === Final outro ===
-echo ""
-animation "💬 Tool created by Allie’s Tech | Contact: +234XXXXXXXXXX"
+    print(Fore.YELLOW + "\nWhat kind of ban are you experiencing?")
+    print("1️⃣  Temporary Ban")
+    print("2️⃣  Permanent Ban")
+    ban_type = input("👉 Enter 1 or 2: ").strip()
+
+    if ban_type not in ["1", "2"]:
+        print(Fore.RED + "❌ Invalid selection. Exiting...")
+        sys.exit(1)
+
+    phone = input("\n📱 Enter your phone number (e.g., +234xxxxxxxxxx): ").strip()
+    if not phone:
+        print(Fore.RED + "❌ No phone number entered. Exiting...")
+        sys.exit(1)
+
+    print(Fore.MAGENTA + "\n🧠 Generating custom recovery message", end="")
+    for _ in range(6):
+        print(".", end="", flush=True)
+        time.sleep(0.3)
+    print("\n")
+
+    subject, body = generate_email(phone, ban_type)
+
+    print(Fore.GREEN + "\n📄 Generated Message:")
+    print(Fore.CYAN + "----------------------------------------------")
+    print("To: support@whatsapp.com")
+    print(f"Subject: {subject}\n")
+    print(body)
+    print(Fore.CYAN + "----------------------------------------------")
+
+    open_mail = input(Fore.YELLOW + "\n📧 Do you want to simulate opening email app? (y/n): ").strip().lower()
+    if open_mail == 'y':
+        print(Fore.CYAN + "\n📨 Simulating launch of email app...")
+        time.sleep(1)
+        print(Fore.YELLOW + "✉️  (Pretending to send this to support@whatsapp.com...)")
+    else:
+        print(Fore.YELLOW + "\n📋 You can copy the message above manually.")
+
+    print()
+    animation("💬 Tool created by Allie’s Tech | Contact: +2348030476809")
+
+if __name__ == "__main__":
+    main()
