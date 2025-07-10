@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import urllib.parse
 from colorama import Fore, Style, init
 
 init(autoreset=True)
@@ -27,12 +28,12 @@ def loading_bar(task="Processing"):
 def banner():
     clear()
     print(Fore.CYAN + Style.BRIGHT + """
-  █████╗ ██╗     ██╗     ██╗███████╗
- ██╔══██╗██║     ██║     ██║██╔════╝
- ███████║██║     ██║     ██║█████╗   
- ██╔══██║██║     ██║     ██║██╔══╝   
- ██║  ██║███████╗███████╗██║███████╗
- ╚═╝  ╚═╝╚══════╝╚══════╝╚═╝╚══════╝
+  █████╗ ██╗     ██╗     ██╗███████╗██╗  ██╗
+ ██╔══██╗██║     ██║     ██║██╔════╝██║ ██╔╝
+ ███████║██║     ██║     ██║█████╗  █████╔╝ 
+ ██╔══██║██║     ██║     ██║██╔══╝  ██╔═██╗ 
+ ██║  ██║███████╗███████╗██║███████╗██║  ██╗
+ ╚═╝  ╚═╝╚══════╝╚══════╝╚═╝╚══════╝╚═╝  ╚═╝
       WHATSAPP BAN REVIEW TOOL - BY ALLIE
 """)
 
@@ -112,6 +113,12 @@ def easter_egg():
         print(Fore.MAGENTA + "🎉 Secret Hack Mode Activated: You found Allie’s Easter Egg!")
         print("🧠 Fun fact: This tool is 100% simulation and just for entertainment 😅")
 
+def open_email_app(subject, body):
+    subject_encoded = urllib.parse.quote(subject)
+    body_encoded = urllib.parse.quote(body)
+    url = f"mailto:support@whatsapp.com?subject={subject_encoded}&body={body_encoded}"
+    os.system(f'termux-open "{url}"')
+
 def main():
     banner()
     animation(Fore.GREEN + "👾 Booting Allies Hack Tool...")
@@ -156,9 +163,11 @@ def main():
     log_action(phone, ban_type)
     easter_egg()
 
+    animation(Fore.CYAN + "\n📬 Launching your email app...")
+    open_email_app(subject, body)
+
     print()
     animation("💬 Tool created by Allie’s Tech | Contact: +2348030476809")
-    print(Fore.GREEN + "\n✅ DONE. You can now copy the message above and email WhatsApp Support.")
 
 if __name__ == "__main__":
     main()
